@@ -1,44 +1,33 @@
 import './chat-component.css'
-import template from './chat-component.html?raw';
-import { CustomEventListener } from '../custom-event-listener/custom-event-listener';
+import { IEvent } from '../custom-event-listener';
+import { ChatComponentView } from './chat-component.view';
 import { IUser, ISocketMessage, messageKindEnum, INewMessage } from './chat-component.model';
 
 export class ChatComponent {
-    public htmlElement!: HTMLElement;
-    
-    private messageInputElement!: HTMLInputElement;
-    private sendButtonElement!: HTMLButtonElement;
+    private chatComponentView!: ChatComponentView; 
     
     private webSocket!: WebSocket;
-    private eventListener = new CustomEventListener();
     private serverUrl!: string;
     private user!: IUser;
 
     constructor(private container: HTMLElement) {
-        const htmlElement = document.createElement('div');
-        htmlElement.classList.add('chat-component');
-        htmlElement.innerHTML = template;
-        container.appendChild(htmlElement);
-
-        this.htmlElement = htmlElement;
-        this.sendButtonElement = htmlElement.querySelector('.inputs-container--send-button') as HTMLButtonElement;
-        this.messageInputElement = htmlElement.querySelector('.inputs-container--input') as HTMLInputElement;
-
-        console.log(this);
+        this.chatComponentView = new ChatComponentView(container);
     }
 
     public init(serverUrl: string, user: IUser): void {
         this.serverUrl = serverUrl;
         this.user = user;
-        this.webSocket = new WebSocket(this.serverUrl);
+        this.webSocket = this.connetToSocket(this.serverUrl);
 
         this.attachEvents();
-        this.attachListeners();
+    }
+
+    private connetToSocket(url: string): WebSocket {
+        return new WebSocket(url);
     }
 
     private attachEvents(): void {
         this.webSocket.addEventListener("open", (ev) => {
-            // you can continue your logic here
             console.log('open', ev);
             this.onSocketConnected();
         }, { once: true });
@@ -48,24 +37,24 @@ export class ChatComponent {
 
             switch(message.kind) {
                 case messageKindEnum.getMessages:
-                break;
+                    this.renderMessages(message.data.messages);
+                    break;
 
                 case messageKindEnum.newMessage:
-                    this.renderNewMessage(message.data);
+                    this.chatComponentView.renderMessage(message.data);
+                    break;
             }
             console.log('message', message);
         });
-    }
 
-    private renderNewMessage(message: INewMessage): void {
-        
+        this.chatComponentView.events.addEventListener('newMessage', ((event: IEvent) => {
+            this.sendMessage(event.data);
+        }));
     }
-
-    private attachListeners() {
-        this.sendButtonElement.addEventListener('click', () => {
-            const message = this.messageInputElement.value;
-            this.messageInputElement.value = '';
-            this.sendMessage(message);
+    
+    private renderMessages(messages: INewMessage[]): void {
+        messages.forEach((message: INewMessage) => {
+            this.chatComponentView.renderMessage(message);
         });
     }
 
@@ -79,7 +68,6 @@ export class ChatComponent {
         }
 
         this.webSocket.send(JSON.stringify(message));
-        console.log('sending message', message);
     }
 
     private onSocketConnected(): void {

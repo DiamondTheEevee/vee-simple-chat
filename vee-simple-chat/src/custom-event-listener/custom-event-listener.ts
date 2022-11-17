@@ -1,9 +1,9 @@
-import { IEvent, ISubscription } from './custom-event-listener.model';
+import { IEventListener, IEvent, ISubscription, ICallbackFunction } from './custom-event-listener.model';
 
-export class CustomEventListener {
+export class CustomEventListener implements IEventListener {
     private subscriptions: ISubscription[]  = [];
 
-    public addEventListener(eventName: string, callbackFunction: any): void {
+    public addEventListener(eventName: string, callbackFunction: ICallbackFunction): void {
         const subscription: ISubscription = {
             eventName,
             callbackFunction
@@ -14,7 +14,6 @@ export class CustomEventListener {
 
     public emit(eventName: string, message: IEvent): void {
         this.subscriptions.forEach(subscription => {
-            console.log('subscription', subscription);
             if (subscription.eventName === eventName) {
                 subscription.callbackFunction(message);
             }

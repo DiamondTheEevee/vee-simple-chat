@@ -2,6 +2,8 @@
     display: flex;
     color: #dcddde;
     font-size: 20px;
+    height: 100%;
+    width: 100%;
 }
 
 .chat-component--users-list {
@@ -10,8 +12,55 @@
     background-color: #303136;
 }
 
-.chat-component--messages {
+.chat-component--chat-window {
     padding: 15px;
     flex: 1;
-    background-color: #AABBCC;
+    background-color: #36393f;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-window--messages {
+    overflow: auto;
+    flex: 1;
+}
+
+.chat-window--inputs-container {
+    display: flex;
+}
+
+.chat-window--inputs-container input {
+    font-size: 32px;
+    padding: 15px;
+}
+
+.chat-window--input button {
+    width: 100px;
+}
+
+.message--author {
+    font-weight: bolder;
+}
+
+.inputs-container--input {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    color: #dcddde;
+    background-color: #40444b;
+    border: none;
+}
+
+.inputs-container--send-button {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    color: #dcddde;
+    background-color: #40444b;
+}
+
+.chat-window--inputs-container {
+    padding-top: 5px;
+}
+
+.messages--message {
+    margin-bottom: 15px;
 }

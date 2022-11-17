@@ -1,8 +1,17 @@
-<div class="chat-component">
-    <div class="chat-component--users-list">
-        users list
+<div class="chat-component--users-list">
+    users list
+</div>
+<div class="chat-component--chat-window">
+    <div class="chat-window--messages">
+        <template name="message-template">
+            <div class="messages--message">
+                <div class="message--author"></div>
+                <div class="message-text"></div>
+            </div>
+        </template>
     </div>
-    <div class="chat-component--messages">
-        messages
-    </div>
+    <form class="chat-window--inputs-container">
+        <input placeholder="Type message" class="inputs-container--input" style="width: 100%;">
+        <button class="inputs-container--send-button">Send</button>
+    </form>
 </div>

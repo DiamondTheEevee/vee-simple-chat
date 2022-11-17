@@ -1,9 +1,17 @@
-export interface ISubscription {
-    callbackFunction(imessage: IMessage): any,
-    id: string
+export interface IEventListener {
+    addEventListener(arg0: string, arg1: ICallbackFunction): void;
+    emit(eventName: string, message: IEvent): void;
 }
 
-export interface IMessage {
-    id: string,
-    message: string
+export interface ICallbackFunction {
+    (arg0: any): void;
+}
+
+export interface ISubscription {
+    eventName: string;
+    callbackFunction: (event: IEvent) => any;
+}
+
+export interface IEvent {
+    data: any
 }
