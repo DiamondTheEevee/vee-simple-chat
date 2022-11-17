@@ -36,10 +36,3 @@ class Main {
 }
 
 new Main().init();
-
-
-// setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
-
-// const socket = new Socket('wss://intive.herokuapp.com/');
-// socket.connect();
-
