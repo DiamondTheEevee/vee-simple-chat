@@ -1,0 +1,17 @@
+.chat-component {
+    display: flex;
+    color: #dcddde;
+    font-size: 20px;
+}
+
+.chat-component--users-list {
+    width: 300px;
+    padding: 15px;
+    background-color: #303136;
+}
+
+.chat-component--messages {
+    padding: 15px;
+    flex: 1;
+    background-color: #AABBCC;
+}

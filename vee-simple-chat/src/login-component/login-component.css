@@ -1,0 +1,13 @@
+.login-component {
+    color: #dcddde;
+    width: 300px;
+    height: 200px;
+}
+
+.login-component--header {
+    background-color: #303136;
+}
+
+.login-component--body {
+    background-color: #AABBCC;
+}
