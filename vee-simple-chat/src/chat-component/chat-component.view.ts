@@ -1,8 +1,9 @@
 import template from './chat-component.html?raw';
-import { CustomEventListener } from '../custom-event-listener';
+import { CustomEventListener, IEvent } from '../custom-event-listener';
 import { messageKindEnum, IMessage } from './chat-component.model';
+import { IChatComponentView } from './chat-component-view.model';
 
-export class ChatComponentView {
+export class ChatComponentView implements IChatComponentView {
     public htmlElement!: HTMLElement;
     public events = new CustomEventListener();
 
@@ -12,16 +13,7 @@ export class ChatComponentView {
     private formElement!: HTMLFormElement;
  
     constructor(private container: HTMLElement) {
-        const htmlElement = document.createElement('div');
-        htmlElement.classList.add('chat-component');
-        htmlElement.innerHTML = template;
-        container.appendChild(htmlElement);
-
-        this.htmlElement = htmlElement;
-        this.messageInputElement = htmlElement.querySelector('.inputs-container--input') as HTMLInputElement;
-        this.messageTemplateElement = htmlElement.querySelector('[name="message-template"]') as HTMLTemplateElement;
-        this.chatWindowMessages = htmlElement.querySelector('.chat-window--messages') as HTMLDivElement;
-        this.formElement = htmlElement.querySelector('.chat-window--inputs-container') as HTMLFormElement;
+        this.appendChatToContainer();
 
         this.attachListeners();
         console.log(this);
@@ -37,6 +29,25 @@ export class ChatComponentView {
 
         this.chatWindowMessages.appendChild(clone);
         this.srollChatToBottom();
+    }
+
+    public onNewMessage(callbackFunction: (arg0: IEvent) => void) {
+        this.events.addEventListener('newMessage', ((event: IEvent) => {
+            callbackFunction(event);
+        }));
+    }
+
+    private appendChatToContainer(): void {
+        const htmlElement = document.createElement('div');
+        htmlElement.classList.add('chat-component');
+        htmlElement.innerHTML = template;
+        this.container.appendChild(htmlElement);
+
+        this.htmlElement = htmlElement;
+        this.messageInputElement = htmlElement.querySelector('.inputs-container--input') as HTMLInputElement;
+        this.messageTemplateElement = htmlElement.querySelector('[name="message-template"]') as HTMLTemplateElement;
+        this.chatWindowMessages = htmlElement.querySelector('.chat-window--messages') as HTMLDivElement;
+        this.formElement = htmlElement.querySelector('.chat-window--inputs-container') as HTMLFormElement;
     }
 
     private attachListeners(): void {

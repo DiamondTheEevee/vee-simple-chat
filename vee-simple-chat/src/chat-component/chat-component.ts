@@ -1,19 +1,15 @@
 import './chat-component.css'
 import { IEvent } from '../custom-event-listener';
-import { ChatComponentView } from './chat-component.view';
 import { IUser, ISocketMessage, messageKindEnum, IMessage, INewSocketMessage } from './chat-component.model';
-import { AbstractComponent } from '../component/abstract.component';
+import { IChatComponentView } from './chat-component-view.model';
 
-export class ChatComponent extends AbstractComponent {
-    private chatComponentView!: ChatComponentView; 
-    
+export class ChatComponent {    
     private webSocket!: WebSocket;
     private serverUrl!: string;
     private user!: IUser;
 
-    constructor(container: HTMLElement) {
-        super(container);
-        this.chatComponentView = new ChatComponentView(container);
+    constructor(private chatComponentView: IChatComponentView) {
+        
     }
 
     public init(serverUrl: string, user: IUser): void {
@@ -50,9 +46,9 @@ export class ChatComponent extends AbstractComponent {
     }
 
     private attachViewEvents(): void {
-        this.chatComponentView.events.addEventListener('newMessage', ((event: IEvent) => {
+        this.chatComponentView.onNewMessage((event: IEvent) => {
             this.sendMessage(event.data);
-        }));
+        });
     }
     
     private renderMessages(messages: IMessage[]): void {

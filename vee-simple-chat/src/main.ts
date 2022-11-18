@@ -1,6 +1,7 @@
 import './style.css'
 import { ChatComponent, IUser } from './chat-component';
 import { CustomEventListener } from './custom-event-listener';
+import { ChatComponentView } from './chat-component/chat-component.view';
 class Main {
     private chatComponent!: ChatComponent;
 
@@ -19,7 +20,8 @@ class Main {
 
     private runChat(user: IUser): void {
         const chatContainer = this.appendChatContainer();
-        this.chatComponent = new ChatComponent(chatContainer);
+        const chatComponentView = new ChatComponentView(chatContainer);
+        this.chatComponent = new ChatComponent(chatComponentView);
         this.chatComponent.init(this.url, user);
     }
 
