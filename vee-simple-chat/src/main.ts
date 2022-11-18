@@ -1,12 +1,12 @@
 import './style.css'
-import typescriptLogo from './typescript.svg'
-import { setupCounter } from './counter'
-import { Socket } from './socket/socket';
-import { LoginComponent } from './login-component/login-component';
 import { ChatComponent, IUser } from './chat-component';
-
+import { CustomEventListener } from './custom-event-listener';
 class Main {
     private chatComponent!: ChatComponent;
+
+    constructor(private url: string) {
+
+    }
 
     public init(): void {
         // const loginComponent = new LoginComponent(documentBody);
@@ -20,7 +20,7 @@ class Main {
     private runChat(user: IUser): void {
         const chatContainer = this.appendChatContainer();
         this.chatComponent = new ChatComponent(chatContainer);
-        this.chatComponent.init('wss://intive.herokuapp.com/', user);
+        this.chatComponent.init(this.url, user);
     }
 
     private appendChatContainer(): HTMLElement {
@@ -35,4 +35,14 @@ class Main {
     }
 }
 
-new Main().init();
+const url = 'wss://intive.herokuapp.com/';
+new Main(url).init();
+
+const event = new CustomEventListener();
+event.addEventListener('abc', (ev) => {
+    console.log('Event Kicked', ev);
+});
+
+setTimeout(() => {
+    event.emit('abc', { data: 'a' });
+}, 3000);

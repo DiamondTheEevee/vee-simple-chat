@@ -1,7 +1,7 @@
 import { IEventListener, IEvent, ISubscription, ICallbackFunction } from './custom-event-listener.model';
 
 export class CustomEventListener implements IEventListener {
-    private subscriptions: ISubscription[]  = [];
+    private subscriptions: ISubscription[] = [];
 
     public addEventListener(eventName: string, callbackFunction: ICallbackFunction): void {
         const subscription: ISubscription = {

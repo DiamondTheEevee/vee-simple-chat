@@ -1,5 +1,5 @@
 export interface IUser {
-    name: string
+    name: string;
 }
 
 export enum messageKindEnum {
@@ -8,11 +8,14 @@ export enum messageKindEnum {
 }
 
 export interface ISocketMessage {
-    kind: messageKindEnum,
-    data: any
+    kind: messageKindEnum;
+    data: any;
+}
+export interface INewSocketMessage extends ISocketMessage {
+    data: IMessage;
 }
 
-export interface INewMessage {
+export interface IMessage {
     author: string;
     text: string;
 }

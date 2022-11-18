@@ -1,6 +1,6 @@
 import template from './chat-component.html?raw';
 import { CustomEventListener } from '../custom-event-listener';
-import { messageKindEnum, INewMessage } from './chat-component.model';
+import { messageKindEnum, IMessage } from './chat-component.model';
 
 export class ChatComponentView {
     public htmlElement!: HTMLElement;
@@ -27,7 +27,7 @@ export class ChatComponentView {
         console.log(this);
     }
 
-    public renderMessage(message: INewMessage): void {
+    public renderMessage(message: IMessage): void {
         const clone = this.messageTemplateElement.content.cloneNode(true) as DocumentFragment;        
         const authorDiv = clone.querySelector('.message--author') as HTMLDivElement;
         const messageDiv = clone.querySelector('.message-text') as HTMLDivElement;
@@ -39,7 +39,7 @@ export class ChatComponentView {
         this.srollChatToBottom();
     }
 
-    private attachListeners() {
+    private attachListeners(): void {
         this.formElement.onsubmit = (ev) => {
             ev.preventDefault();
             const message = this.messageInputElement.value;
@@ -50,7 +50,7 @@ export class ChatComponentView {
         }
     }
 
-    private srollChatToBottom() {
+    private srollChatToBottom(): void {
         this.chatWindowMessages.scrollTop = this.chatWindowMessages.scrollHeight;
     }
 }

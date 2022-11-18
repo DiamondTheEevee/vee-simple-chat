@@ -1,16 +1,18 @@
 import './chat-component.css'
 import { IEvent } from '../custom-event-listener';
 import { ChatComponentView } from './chat-component.view';
-import { IUser, ISocketMessage, messageKindEnum, INewMessage } from './chat-component.model';
+import { IUser, ISocketMessage, messageKindEnum, IMessage, INewSocketMessage } from './chat-component.model';
+import { AbstractComponent } from '../component/abstract.component';
 
-export class ChatComponent {
+export class ChatComponent extends AbstractComponent {
     private chatComponentView!: ChatComponentView; 
     
     private webSocket!: WebSocket;
     private serverUrl!: string;
     private user!: IUser;
 
-    constructor(private container: HTMLElement) {
+    constructor(container: HTMLElement) {
+        super(container);
         this.chatComponentView = new ChatComponentView(container);
     }
 
@@ -19,17 +21,17 @@ export class ChatComponent {
         this.user = user;
         this.webSocket = this.connetToSocket(this.serverUrl);
 
-        this.attachEvents();
+        this.attachWebsocketEvents();
+        this.attachViewEvents();
     }
 
     private connetToSocket(url: string): WebSocket {
         return new WebSocket(url);
     }
 
-    private attachEvents(): void {
-        this.webSocket.addEventListener("open", (ev) => {
-            console.log('open', ev);
-            this.onSocketConnected();
+    private attachWebsocketEvents(): void {
+        this.webSocket.addEventListener("open", () => {
+            this.fetchAllMessages();
         }, { once: true });
 
         this.webSocket.addEventListener("message", (ev: MessageEvent) => {
@@ -44,22 +46,23 @@ export class ChatComponent {
                     this.chatComponentView.renderMessage(message.data);
                     break;
             }
-            console.log('message', message);
         });
+    }
 
+    private attachViewEvents(): void {
         this.chatComponentView.events.addEventListener('newMessage', ((event: IEvent) => {
             this.sendMessage(event.data);
         }));
     }
     
-    private renderMessages(messages: INewMessage[]): void {
-        messages.forEach((message: INewMessage) => {
+    private renderMessages(messages: IMessage[]): void {
+        messages.forEach((message: IMessage) => {
             this.chatComponentView.renderMessage(message);
         });
     }
 
     private sendMessage(text: string): void {
-        const message: ISocketMessage = {
+        const message: INewSocketMessage = {
             kind: messageKindEnum.newMessage,
             data: {
                 author: this.user.name,
@@ -70,10 +73,9 @@ export class ChatComponent {
         this.webSocket.send(JSON.stringify(message));
     }
 
-    private onSocketConnected(): void {
-        const message: ISocketMessage = {
-            kind: messageKindEnum.getMessages,
-            data: null
+    private fetchAllMessages(): void {
+        const message: Partial<ISocketMessage> = {
+            kind: messageKindEnum.getMessages
         };
 
         this.webSocket.send(JSON.stringify(message));
